@@ -1,10 +1,16 @@
+@import "_variables.css";
+
 body {
-  color: red;
+  color: var(--color);
 }
 
 .foo {
   color: blue;
   display: flex;
+  & .bar {
+    color: blue;
+    display: flex;
+  }
 }
 
 .foo {
@@ -18,6 +24,6 @@ body {
 
 @media (min-width: 300px) {
   .bar {
-    color: red;
+    color: var(--color);
   }
 }

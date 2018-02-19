@@ -1,3 +1,7 @@
+:root {
+  --mainColor: rgba(18, 52, 86, 0.47059);
+}
+
 .bar {
-  color: yellow;
+  color: var(--mainColor);
 }

@@ -7,6 +7,8 @@ const cssModules = require('postcss-modules')
 const autoPrefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const mqpacker = require('css-mqpacker')
+const presetEnv = require('postcss-preset-env')
+const atImport = require("postcss-import")
 
 const {distPath} = require('../util')
 const {DEV, CWD} = require('../constants')
@@ -15,25 +17,23 @@ const store = require('../store')
 const {addClassNames, updateBuilding} = require('../store/style')
 
 const commonPlugins = [
+  atImport(),
+  presetEnv({
+    stage: 0
+  }),
   cssModules({
-    generateScopedName (name, filename, css) {
-      const i = css.indexOf(`.${name}`)
-      const line = css.substr(0, i).split(/[\r\n]/).length
-      const file = path.basename(filename, '.css')
-
-      return `${file}_${name}_${shortId.generate()}`
-    },
+    generateScopedName: '[name]_[local]_[hash:base64:5]',
 
     getJSON (cssFileName, json, outputFileName) {
       const nameSpace = path.basename(cssFileName, '.css')
       store.dispatch(addClassNames({[nameSpace]: json}))
     }
   }),
-  mqpacker,
 ]
 
 const productionPlugins = [
   autoPrefixer,
+  mqpacker,
   cssnano,
 ]
 
@@ -51,8 +51,9 @@ module.exports = async filePaths => {
     const dist = distPath(filePath)
     try {
       const css = await fs.readFile(filePath)
-      const {css: data} = await postcss(usingPlugins).process(css, {from: filePath, to: dist})
-      styleSheets.push(data)
+      const result = await postcss(usingPlugins).process(css, {from: filePath, to: dist})
+
+      styleSheets.push(result.css)
     } catch (err) {
       console.error(err)
     }
