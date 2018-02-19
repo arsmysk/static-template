@@ -1,0 +1,23 @@
+body {
+  color: red;
+}
+
+.foo {
+  color: blue;
+  display: flex;
+}
+
+.foo {
+  border: solid 1px;
+}
+@media (min-width: 300px) {
+  .baz {
+    color: green;
+  }
+}
+
+@media (min-width: 300px) {
+  .bar {
+    color: red;
+  }
+}

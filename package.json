@@ -1,0 +1,29 @@
+{
+  "devDependencies": {
+    "autoprefixer": "^8.0.0",
+    "chalk": "^2.3.1",
+    "chokidar": "^2.0.2",
+    "consolidate": "^0.15.0",
+    "css-mqpacker": "^6.0.2",
+    "cssnano": "^3.10.0",
+    "fs-extra": "^5.0.0",
+    "glob": "^7.1.2",
+    "handlebars": "^4.0.11",
+    "jest": "^22.3.0",
+    "nodemon": "^1.15.0",
+    "ora": "^1.4.0",
+    "postcss": "^6.0.18",
+    "postcss-modules": "^1.1.0",
+    "postcss-scss": "^1.0.3",
+    "redux": "^3.7.2",
+    "shortid": "^2.2.8",
+    "webpack": "^3.11.0",
+    "moment": "^2.20.1"
+  },
+  "scripts": {
+    "build": "NODE_ENV=development node ./bin/cmd/build",
+    "dev": "NODE_ENV=development node ./bin/cmd/watch",
+    "build:production": "NODE_ENV=production node bin",
+    "test": "jest"
+  }
+}
