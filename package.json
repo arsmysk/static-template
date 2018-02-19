@@ -19,7 +19,6 @@
     "postcss-modules": "^1.1.0",
     "postcss-preset-env": "^3.2.0",
     "redux": "^3.7.2",
-    "shortid": "^2.2.8",
     "webpack": "^3.11.0"
   },
   "scripts": {

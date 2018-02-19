@@ -1,6 +1,5 @@
 const path = require('path')
 const fs = require('fs-extra')
-const shortId = require('shortid')
 
 const postcss = require('postcss')
 const cssModules = require('postcss-modules')
