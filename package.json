@@ -24,7 +24,7 @@
   "scripts": {
     "build": "NODE_ENV=development node ./bin/cmd/build",
     "dev": "NODE_ENV=development node ./bin/cmd/watch",
-    "build:production": "NODE_ENV=production node bin",
+    "build:production": "NODE_ENV=production node ./bin/cmd/build",
     "test": "jest"
   }
 }

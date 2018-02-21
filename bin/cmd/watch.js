@@ -1,34 +1,51 @@
-const path = require('path')
+const {fromRoot} = require('../util')
 const chokidar = require('chokidar')
 const chalk = require('chalk')
 
+const initServer = require('../initserver')
+const {bs} = require('../initserver')
+
+const initStore = require('../initStore')
 const store = require('../store')
+const {updateStyle} = require('../store/style')
+const {updateTemplate} = require('../store/template')
 
-const {CWD} = require('../constants')
-const {buildHtml, buildCss} = require('../builders')
-const bs = require('../server')
-require('./build')
-
-console.log(chalk.green('Start watch build\n'))
-
-const cssWatcher = chokidar.watch(path.resolve(CWD, 'src/**/*.css'), {ignored: /(^|[\/\\])\../})
-const htmlWatcher = chokidar.watch(path.resolve(CWD, 'src/**/*.html'), {ignored: /(^|[\/\\])\../});
-
-['add', 'change', 'unlink', 'unlinkDir'].forEach(eventName => {
-  cssWatcher.on(eventName, async () => {
-    const isBuilding = store.getState().style.building
-    if (!isBuilding) await buildCss()
-
-    // FIXME
-    setTimeout(() => {
-      bs.reload('*.css')
-      bs.reload('*.html')
-    }, 500)
-  })
-
-  htmlWatcher.on(eventName, () => {
-    const isBuilding = store.getState().style.building
-    if (!isBuilding) buildHtml()
-    bs.reload('*.html')
-  })
+initStore({
+  ready: initServer,
+  didBuild: ({type}) => {
+    switch (type) {
+      case 'css':
+        bs.reload('*.css')
+      case 'html':
+        bs.reload('*.html')
+    }
+  }
 })
+
+const commonOptions = {
+  ignored: /(^|[\/\\])\../,
+  awaitWriteFinish: {
+    stabilityThreshold: 200,
+    pollInterval: 100,
+  }
+}
+const cssWatcher = chokidar.watch(fromRoot('src/**/*.css'), commonOptions)
+const htmlWatcher = chokidar.watch(fromRoot('src/**/*.html'), commonOptions)
+
+const initWatchers = async () => {
+  console.log(chalk.green('Start watch build\n'))
+
+  await Promise.all([
+    new Promise(resolve => cssWatcher.on('ready', resolve)),
+    new Promise(resolve => htmlWatcher.on('ready', resolve)),
+  ])
+
+  cssWatcher.on('all', async (ev) => {
+    store.dispatch(updateStyle())
+  })
+
+  htmlWatcher.on('all', async (ev) => {
+    store.dispatch(updateTemplate())
+  })
+}
+initWatchers()

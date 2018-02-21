@@ -1,20 +1,49 @@
-const {buildHtml} = require('./builders')
+const {clearDist} = require('./util')
+const {buildHtml, buildCss} = require('./builders')
 const store = require('./store')
 
-const handler = () => {
-  let currentState
+const handler = ({
+  ready,
+  didBuild,
+} = {
+  ready: new Function(),
+  didBuild: new Function(),
+}) => {
+  store.dispatch({type: '@INIT'})
+  let building = false
+  let current = store.getState()
 
-  return () => {
-    let previousState = currentState
-    currentState = store.getState()
+  // initial build
+  ;(async () => {
+    await clearDist()
+    building = true
+    await buildCss()
+    await buildHtml()
+    building = false
+    ready()
+  })()
 
-    const initial = !previousState
-    if (initial || previousState === currentState) return
+  // handler
+  return async () => {
+    let results = []
 
-    if ((!currentState.style.building && !currentState.template.building) &&
-      (previousState.style !== currentState.style ||
-        previousState.template.html !== currentState.template.html)) buildHtml()
+    let previous = current
+    current = store.getState()
+
+    if (building || previous ===  current) return
+    building = true
+
+    if (previous.style.lastUpdated < current.style.lastUpdated) {
+      results.push(await buildCss(), await buildHtml())
+    }
+
+    if (previous.template.lastUpdated < current.template.lastUpdated) {
+      results.push(await buildHtml())
+    }
+
+    building = false
+    results.forEach(result => didBuild(result))
   }
 }
 
-module.exports = () => store.subscribe(handler())
+module.exports = (eventHandlers) => store.subscribe(handler(eventHandlers))

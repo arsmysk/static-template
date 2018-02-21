@@ -11,21 +11,43 @@ const cssSpinner = ora('Building Stylesheet')
 const htmlSpinner = ora('Building HTML')
 
 module.exports.buildHtml = async () => {
-  const filePaths = await glob('src/**/*.html')
-  htmlSpinner.start()
-  await buildTemplate(filePaths)
-  htmlSpinner.stopAndPersist({
-    symbol: '📝',
-    text: `Build HTML ${chalk.gray('@', moment().format('h:mm:ss'))}`
-  })
+  let error
+
+  try {
+    const filePaths = await glob('src/**/*.html')
+    htmlSpinner.start()
+    await buildTemplate(filePaths)
+    htmlSpinner.stopAndPersist({
+      symbol: '📝',
+      text: `Build HTML ${chalk.gray('@', moment().format('h:mm:ss'))}`
+    })
+  } catch (err) {
+    error = err
+  }
+
+  return {
+    type: 'html',
+    error,
+  }
 }
 
 module.exports.buildCss = async () => {
-  const filePaths = await glob('src/**/*.css')
-  cssSpinner.start()
-  await buildStyle(filePaths)
-  cssSpinner.stopAndPersist({
-    symbol: '🎨',
-    text: `Build Stylesheet ${chalk.gray('@', moment().format('h:mm:ss'))}`
-  })
+  let error
+
+  try {
+    const filePaths = await glob('src/**/*.css')
+    cssSpinner.start()
+    await buildStyle(filePaths)
+    cssSpinner.stopAndPersist({
+      symbol: '🎨',
+      text: `Build Stylesheet ${chalk.gray('@', moment().format('h:mm:ss'))}`
+    })
+  } catch (err) {
+    error = err
+  }
+
+  return {
+    type: 'css',
+    error,
+  }
 }

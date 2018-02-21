@@ -9,11 +9,11 @@ const mqpacker = require('css-mqpacker')
 const presetEnv = require('postcss-preset-env')
 const atImport = require("postcss-import")
 
-const {distPath} = require('../util')
-const {DEV, CWD} = require('../constants')
+const {distPath, fromRoot} = require('../util')
+const {DEV} = require('../constants')
 
 const store = require('../store')
-const {addClassNames, updateBuilding} = require('../store/style')
+const {addClassNames} = require('../store/style')
 
 const commonPlugins = [
   atImport(),
@@ -42,8 +42,6 @@ const usingPlugins = DEV ? commonPlugins :
   ]
 
 module.exports = async filePaths => {
-  store.dispatch(updateBuilding(true))
-
   const styleSheets = []
 
   await Promise.all(filePaths.map(async filePath => {
@@ -58,7 +56,5 @@ module.exports = async filePaths => {
     }
   }))
 
-  await fs.outputFile(path.resolve(CWD, 'dist/assets/style/style.css'), styleSheets.join('\n'))
-
-  store.dispatch(updateBuilding(false))
+  await fs.outputFile(fromRoot('dist/assets/style/style.css'), styleSheets.join('\n'))
 }

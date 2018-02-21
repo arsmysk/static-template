@@ -2,14 +2,11 @@ const fs = require('fs-extra')
 const build = require('consolidate').handlebars
 
 const {distPath} = require('../util')
-const {CWD} = require('../constants')
 
 const store = require('../store')
-const {addHtml, updateBuilding} = require('../store/template')
+const {addHtml} = require('../store/template')
 
 module.exports = async filePaths => {
-  store.dispatch(updateBuilding(true))
-
   const css = store.getState().style.classNames
 
   await Promise.all(filePaths.map(async filePath => {
@@ -22,6 +19,4 @@ module.exports = async filePaths => {
       console.error(err)
     }
   }))
-
-  store.dispatch(updateBuilding(false))
 }
