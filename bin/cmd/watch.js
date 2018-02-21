@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const initServer = require('../initserver')
 const {bs} = require('../initserver')
 
+const {config} = require('../constants')
 const initStore = require('../initStore')
 const store = require('../store')
 const {updateStyle} = require('../store/style')
@@ -14,10 +15,10 @@ initStore({
   ready: initServer,
   didBuild: ({type}) => {
     switch (type) {
-      case 'css':
-        bs.reload('*.css')
-      case 'html':
-        bs.reload('*.html')
+      case 'style':
+        bs.reload(`*${config.style.ext_to}`)
+      case 'template':
+        bs.reload(`*${config.template.ext_to}`)
     }
   }
 })
@@ -29,8 +30,8 @@ const commonOptions = {
     pollInterval: 100,
   }
 }
-const cssWatcher = chokidar.watch(fromRoot('src/**/*.css'), commonOptions)
-const htmlWatcher = chokidar.watch(fromRoot('src/**/*.html'), commonOptions)
+const cssWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.style.ext_from}`), commonOptions)
+const htmlWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.template.ext_from}`), commonOptions)
 
 const initWatchers = async () => {
   console.log(chalk.green('Start watch build\n'))
@@ -40,11 +41,11 @@ const initWatchers = async () => {
     new Promise(resolve => htmlWatcher.on('ready', resolve)),
   ])
 
-  cssWatcher.on('all', async (ev) => {
+  cssWatcher.on('all', async () => {
     store.dispatch(updateStyle())
   })
 
-  htmlWatcher.on('all', async (ev) => {
+  htmlWatcher.on('all', async () => {
     store.dispatch(updateTemplate())
   })
 }

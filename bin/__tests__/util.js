@@ -1,6 +1,12 @@
 const {distPath} = require('../util')
+jest.mock('../../config')
 
 describe('distPath', () => {
+  it('change ext', () => {
+    const path = distPath('/src/path/to/file.js', '.php')
+    expect(path).toEqual('/dist/path/to/file.php')
+  })
+
   it('path start from `/src`', () => {
     const path = distPath('/src/path/to/file.js')
     expect(path).toEqual('/dist/path/to/file.js')

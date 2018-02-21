@@ -17,8 +17,8 @@
     "nodemon": "^1.15.0",
     "ora": "^1.4.0",
     "postcss": "^6.0.18",
-    "postcss-import": "^11.1.0",
     "postcss-modules": "^1.1.0",
+    "postcss-partial-import": "^4.1.0",
     "postcss-preset-env": "^3.2.0",
     "redux": "^3.7.2",
     "webpack": "^3.11.0"

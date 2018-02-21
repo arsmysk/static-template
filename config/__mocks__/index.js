@@ -1,8 +1,7 @@
 module.exports = (dev) => ({
   src: 'src',
   dist: 'dist',
-  // not work yet
-  // copy_dir: ['lib', 'static'],
+  copy_dir: ['lib', 'static'],
   style: {
     ignore_prefix: '_',
     ext_from: '.css',
@@ -11,11 +10,10 @@ module.exports = (dev) => ({
   template: {
     ignore_prefix: '_',
     ext_from: '.html',
-    ext_to: '.html',
+    ext_to: '.php',
   },
-  // not work yet
-  // script: {
-  //   ext_from: '.js',
-  //   ext_to: '.js',
-  // },
+  script: {
+    ext_from: '.js',
+    ext_to: '.js',
+  },
 })
