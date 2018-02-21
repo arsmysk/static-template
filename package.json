@@ -4,12 +4,14 @@
     "browser-sync": "^2.23.6",
     "chalk": "^2.3.1",
     "chokidar": "^2.0.2",
+    "commander": "^2.14.1",
     "consolidate": "^0.15.0",
     "css-mqpacker": "^6.0.2",
     "cssnano": "^3.10.0",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
     "handlebars": "^4.0.11",
+    "inquirer": "^5.1.0",
     "jest": "^22.3.0",
     "moment": "^2.20.1",
     "nodemon": "^1.15.0",
@@ -22,9 +24,10 @@
     "webpack": "^3.11.0"
   },
   "scripts": {
-    "build": "NODE_ENV=development node ./bin/cmd/build",
-    "dev": "NODE_ENV=development node ./bin/cmd/watch",
-    "build:production": "NODE_ENV=production node ./bin/cmd/build",
+    "start": "./bin/index.js",
+    "build": "./bin/cmd/index.js -b",
+    "dev": "./bin/cmd/index.js -w",
+    "build:production": "./bin/cmd/index.js -pb",
     "test": "jest"
   }
 }
