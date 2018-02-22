@@ -1,5 +1,5 @@
 const {clearDist} = require('./util')
-const {buildHtml, buildCss, copyAssets} = require('./builders')
+const {buildHtml, buildCss, copyAssets, loadData} = require('./builders')
 const store = require('./store')
 
 const handler = ({
@@ -18,6 +18,7 @@ const handler = ({
     await clearDist()
     building = true
     await buildCss()
+    await loadData()
     await buildHtml()
     await copyAssets()
     building = false
@@ -36,6 +37,10 @@ const handler = ({
 
     if (previous.style.lastUpdated < current.style.lastUpdated) {
       results.push(await buildCss(), await buildHtml())
+    }
+
+    if (previous.data.lastUpdated < current.data.lastUpdated) {
+      results.push(await loadData(), await buildHtml())
     }
 
     if (previous.template.lastUpdated < current.template.lastUpdated) {

@@ -11,6 +11,9 @@ const buildTemplate = require('./template')
 const buildStyle = require('./style')
 const {config} = require('../constants')
 
+const store = require('../store')
+const {updateEntities} = require('../store/data')
+
 const cssSpinner = ora('Building Stylesheet')
 const htmlSpinner = ora('Building HTML')
 
@@ -86,6 +89,34 @@ module.exports.copyAssets = async () => {
 
   return {
     type: 'asset',
+    error,
+  }
+}
+
+module.exports.loadData = async () => {
+  let error
+
+  try {
+    const filePathes = await glob(fromRoot(`data/*.json`))
+    const data = await Promise.all(filePathes.map(async filePath => {
+      const data = await fs.readFile(filePath)
+      return {
+        page: path.basename(filePath, path.extname(filePath)),
+        data: JSON.parse(data.toString()),
+      }
+    }))
+
+    const concateData = data.reduce((acc, {page, data}) => ({...acc,
+      [page]: data
+    }), {})
+
+    store.dispatch(updateEntities(concateData))
+  } catch (err) {
+    error = err
+  }
+
+  return {
+    type: 'data',
     error,
   }
 }
