@@ -16,6 +16,8 @@ const {updateEntities} = require('../store/data')
 
 const cssSpinner = ora('Building Stylesheet')
 const htmlSpinner = ora('Building HTML')
+const assetSpinner = ora('Update Asset')
+const dataSpinner = ora('Update Data')
 
 module.exports.buildHtml = async () => {
   let error
@@ -34,7 +36,7 @@ module.exports.buildHtml = async () => {
     htmlSpinner.start()
     await buildTemplate(filePaths)
     htmlSpinner.stopAndPersist({
-      symbol: '📝',
+      symbol: '📝 ',
       text: `Build HTML ${chalk.gray('@', moment().format('h:mm:ss'))}`
     })
   } catch (err) {
@@ -64,7 +66,7 @@ module.exports.buildCss = async () => {
     cssSpinner.start()
     await buildStyle(filePaths)
     cssSpinner.stopAndPersist({
-      symbol: '🎨',
+      symbol: '🎨 ',
       text: `Build Stylesheet ${chalk.gray('@', moment().format('h:mm:ss'))}`
     })
   } catch (err) {
@@ -82,7 +84,12 @@ module.exports.copyAssets = async () => {
   let filePathes = config.copy_dir.map(dir => fromRoot(path.join(config.src, dir)))
 
   try {
+    assetSpinner.start()
     await Promise.all(filePathes.map(filePath => fs.copy(filePath, distPath(filePath))))
+    assetSpinner.stopAndPersist({
+      symbol: '📦 ',
+      text: `Copy Assets ${chalk.gray('@', moment().format('h:mm:ss'))}`
+    })
   } catch (err) {
     error = err
   }
@@ -97,6 +104,7 @@ module.exports.loadData = async () => {
   let error
 
   try {
+    dataSpinner.start()
     const filePathes = await glob(fromRoot(`data/*.json`))
     const data = await Promise.all(filePathes.map(async filePath => {
       const data = await fs.readFile(filePath)
@@ -111,6 +119,11 @@ module.exports.loadData = async () => {
     }), {})
 
     store.dispatch(updateEntities(concateData))
+
+    dataSpinner.stopAndPersist({
+      symbol: '🗂 ',
+      text: `Update Data ${chalk.gray('@', moment().format('h:mm:ss'))}`
+    })
   } catch (err) {
     error = err
   }
