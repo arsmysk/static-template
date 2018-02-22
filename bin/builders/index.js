@@ -4,6 +4,8 @@ const ora = require('ora')
 const chalk = require('chalk')
 const moment = require('moment')
 const path = require('path')
+const fs = require('fs-extra')
+const {distPath, fromRoot} = require('../util')
 
 const buildTemplate = require('./template')
 const buildStyle = require('./style')
@@ -68,6 +70,22 @@ module.exports.buildCss = async () => {
 
   return {
     type: 'style',
+    error,
+  }
+}
+
+module.exports.copyAssets = async () => {
+  let error
+  let filePathes = config.copy_dir.map(dir => fromRoot(path.join(config.src, dir)))
+
+  try {
+    await Promise.all(filePathes.map(filePath => fs.copy(filePath, distPath(filePath))))
+  } catch (err) {
+    error = err
+  }
+
+  return {
+    type: 'asset',
     error,
   }
 }

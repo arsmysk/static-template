@@ -1,11 +1,10 @@
 module.exports = (dev) => ({
   src: 'src',
   dist: 'dist',
-  // not work yet
-  // copy_dir: ['lib', 'static'],
+  copy_dir: ['assets/libs'],
   style: {
     ignore_prefixes: ['_'],
-    ignore_dirs: ['components'],
+    ignore_dirs: ['components', 'assets/libs'],
     ext_from: '.css',
     ext_to: '.css',
   },
