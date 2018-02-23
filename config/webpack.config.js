@@ -1,5 +1,5 @@
 const webpack = require('webpack')
-const {globEntries} = require('../bin/util')
+const {globWebpackEntries} = require('../bin/util')
 const path = require('path')
 
 const cwd = process.cwd()
@@ -25,7 +25,7 @@ const usingPlugins = process.env.NODE_ENV === 'development' ? commonPlugins :
   ]
 
 module.exports = {
-  entry: globEntries(path.join(cwd, 'src/assets/script/[!_]*.js')),
+  entry: globWebpackEntries(path.join(cwd, 'src/assets/script/[!_]*.js')),
   output: {
     filename: `[name].js`,
     path: path.join(cwd, 'dist/assets/script/')

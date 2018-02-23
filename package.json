@@ -14,7 +14,7 @@
     "css-mqpacker": "^6.0.2",
     "cssnano": "^3.10.0",
     "fs-extra": "^5.0.0",
-    "glob": "^7.1.2",
+    "globby": "^8.0.1",
     "inquirer": "^5.1.0",
     "jest": "^22.3.0",
     "js-beautify": "^1.7.5",

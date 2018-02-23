@@ -1,18 +1,20 @@
 const {promisify} = require('util')
-const glob = promisify(require('glob'))
+const glob = require('globby')
 const ora = require('ora')
 const chalk = require('chalk')
 const moment = require('moment')
 const path = require('path')
 const fs = require('fs-extra')
-const {distPath, fromRoot} = require('../util')
+const {distPath, fromRoot, readFiles, buildFiles, outputFiles} = require('../util')
 
 const buildTemplate = require('./template')
 const buildStyle = require('./style')
 const buildScript = require('./script')
+const loadJson = require('./data')
 const {config} = require('../constants')
 
 const store = require('../store')
+const {addHtml} = require('../store/template')
 const {updateEntities} = require('../store/data')
 
 const cssSpinner = ora('Building Stylesheet')
@@ -21,8 +23,22 @@ const assetSpinner = ora('Update Asset')
 const dataSpinner = ora('Update Data')
 const scriptSpinner = ora('Building JavaScript')
 
+const stopSpinnerGracefully = ({error, spinner, symbol, warning, success}) => {
+  const text = (error ? warning : success)
+    + chalk.gray(' @', moment().format('h:mm:ss'))
+  const color = error ? chalk.red : chalk.white
+
+  spinner.stopAndPersist({
+    symbol,
+    text: color(text)
+  })
+}
+
 module.exports.buildHtml = async () => {
+  htmlSpinner.start()
+  const builder = buildFiles(buildTemplate)
   let error
+
   const from = config.src
   const ext = config.template.ext_from
   const ignorePrefixes = config.template.ignore_prefixes.length > 0 ?
@@ -34,16 +50,26 @@ module.exports.buildHtml = async () => {
   const matchPattern = path.join(from, '/**/', ignoreDirs, `${ignorePrefixes}*${ext}`)
 
   try {
-    const filePaths = await glob(matchPattern)
-    htmlSpinner.start()
-    await buildTemplate(filePaths)
-    htmlSpinner.stopAndPersist({
-      symbol: '📝 ',
-      text: `Build HTML ${chalk.gray('@', moment().format('h:mm:ss'))}`
-    })
+    const files = await readFiles(matchPattern)
+    const results = builder(store.getState(), files)
+      .map(({file, content}) => ({
+        file: distPath(file, config.template.ext_to),
+        content
+      }))
+    await outputFiles(({file}) => store.dispatch(addHtml(file)))(results)
   } catch (err) {
+    htmlSpinner.stop()
+    console.error(chalk.red(err))
     error = err
   }
+
+  stopSpinnerGracefully({
+    error,
+    spinner: htmlSpinner,
+    symbol: '📝 ',
+    success: 'Build HTML',
+    warning: 'Build Faild',
+  })
 
   return {
     type: 'template',
@@ -52,7 +78,10 @@ module.exports.buildHtml = async () => {
 }
 
 module.exports.buildCss = async () => {
+  cssSpinner.start()
+  const builder = buildFiles(buildStyle)
   let error
+
   const from = config.src
   const ext = config.style.ext_from
   const ignorePrefixes = config.style.ignore_prefixes.length > 0 ?
@@ -64,16 +93,27 @@ module.exports.buildCss = async () => {
   const matchPattern = path.join(from, '/**/', ignoreDirs, `${ignorePrefixes}*${ext}`)
 
   try {
-    const filePathes = await glob(matchPattern)
-    cssSpinner.start()
-    await buildStyle(filePathes)
-    cssSpinner.stopAndPersist({
-      symbol: '🎨 ',
-      text: `Build Stylesheet ${chalk.gray('@', moment().format('h:mm:ss'))}`
-    })
+    const files = await readFiles(matchPattern)
+    const portions = builder(undefined, files)
+    const results = await Promise.all(portions
+      .map((portion, idx) =>
+        portion(distPath(files[idx].file, config.style.ext_to)))
+    )
+
+    await outputFiles()(results)
   } catch (err) {
+    cssSpinner.stop()
+    console.error(chalk.red(err))
     error = err
   }
+
+  stopSpinnerGracefully({
+    error,
+    spinner: cssSpinner,
+    symbol: '🎨 ',
+    success: 'Build Stylesheet',
+    warning: 'Build Faild',
+  })
 
   return {
     type: 'style',
@@ -82,19 +122,26 @@ module.exports.buildCss = async () => {
 }
 
 module.exports.copyAssets = async () => {
+  assetSpinner.start()
+  const builder = buildFiles((state, {file}) => fs.copy(file, distPath(file), false))
   let error
-  let filePathes = config.copy_dir.map(dir => fromRoot(path.join(config.src, dir)))
 
   try {
-    assetSpinner.start()
-    await Promise.all(filePathes.map(filePath => fs.copy(filePath, distPath(filePath))))
-    assetSpinner.stopAndPersist({
-      symbol: '📦 ',
-      text: `Copy Assets ${chalk.gray('@', moment().format('h:mm:ss'))}`
-    })
+    const files = await readFiles(config.copy_dir.map(dir => fromRoot(path.join(config.src, dir))))
+    await builder(undefined, files)
   } catch (err) {
+    assetSpinner.stop()
+    console.error(chalk.red(err))
     error = err
   }
+
+  stopSpinnerGracefully({
+    error,
+    spinner: assetSpinner,
+    symbol: '📦 ',
+    success: 'Copy Assets',
+    warning: 'Copy Faild',
+  })
 
   return {
     type: 'asset',
@@ -103,32 +150,31 @@ module.exports.copyAssets = async () => {
 }
 
 module.exports.loadData = async () => {
+  dataSpinner.start()
+  const builder = buildFiles(loadJson)
   let error
 
   try {
-    dataSpinner.start()
-    const filePathes = await glob(fromRoot(`data/*.json`))
-    const data = await Promise.all(filePathes.map(async filePath => {
-      const data = await fs.readFile(filePath)
-      return {
-        page: path.basename(filePath, path.extname(filePath)),
-        data: JSON.parse(data.toString()),
-      }
-    }))
+    const files = await readFiles(fromRoot(`data/*.json`))
+    const data = builder(undefined, files)
+      .reduce((acc, {page, data}) => ({...acc,
+        [page]: data
+      }), {})
 
-    const concateData = data.reduce((acc, {page, data}) => ({...acc,
-      [page]: data
-    }), {})
-
-    store.dispatch(updateEntities(concateData))
-
-    dataSpinner.stopAndPersist({
-      symbol: '🗂 ',
-      text: `Update Data ${chalk.gray('@', moment().format('h:mm:ss'))}`
-    })
+    store.dispatch(updateEntities(data))
   } catch (err) {
+    dataSpinner.stop()
+    console.error(chalk.red(err))
     error = err
   }
+
+  stopSpinnerGracefully({
+    error,
+    spinner: dataSpinner,
+    symbol: '🗂 ',
+    success: 'Update Data',
+    warning: 'Update Faild',
+  })
 
   return {
     type: 'data',
@@ -136,10 +182,8 @@ module.exports.loadData = async () => {
   }
 }
 
-// TODO: refactor below code
 module.exports.buildJs = async jsWatcher => {
-  let error
-  const {runner, watcher} = buildScript()
+  const {runner, watcher} = buildScript
 
   if (jsWatcher) {
     watcher((err, stats) => {
@@ -163,20 +207,28 @@ module.exports.buildJs = async jsWatcher => {
       jsWatcher()
     })
   } else {
+    let error
+    scriptSpinner.start()
+
     try {
-      scriptSpinner.start()
       await runner()
-      scriptSpinner.stopAndPersist({
-        symbol: '🦄 ',
-        text: `Build JavaScript ${chalk.gray('@', moment().format('h:mm:ss'))}`
-      })
     } catch (err) {
+      scriptSpinner.stop()
+      console.error(chalk.red(err))
       error = err
     }
-  }
 
-  return {
-    type: 'script',
-    error,
+    stopSpinnerGracefully({
+      error,
+      spinner: scriptSpinner,
+      symbol: '🦄 ',
+      success: 'Build JavaScript',
+      warning: 'Build Faild',
+    })
+
+    return {
+      type: 'script',
+      error,
+    }
   }
 }

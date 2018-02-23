@@ -1,5 +1,4 @@
 const path = require('path')
-const fs = require('fs-extra')
 
 const postcss = require('postcss')
 const cssModules = require('postcss-modules')
@@ -43,14 +42,7 @@ const usingPlugins = DEV ? commonPlugins :
     ...productionPlugins,
   ]
 
-module.exports = filePaths => Promise.all(filePaths.map(async filePath => {
-  const dist = distPath(filePath, config.style.ext_to)
-  try {
-    const css = await fs.readFile(filePath)
-    const result = await postcss(usingPlugins).process(css, {from: filePath, to: dist})
-
-    fs.outputFile(fromRoot(dist), result)
-  } catch (err) {
-    console.error(err)
-  }
-}))
+module.exports = (store, {file, content}) => async dist => {
+  const builded = await postcss(usingPlugins).process(content, {from: file, to: dist})
+  return {file: dist, content: builded}
+}
