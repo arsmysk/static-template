@@ -64,9 +64,9 @@ module.exports.buildCss = async () => {
   const matchPattern = path.join(from, '/**/', ignoreDirs, `${ignorePrefixes}*${ext}`)
 
   try {
-    const filePaths = await glob(matchPattern)
+    const filePathes = await glob(matchPattern)
     cssSpinner.start()
-    await buildStyle(filePaths)
+    await buildStyle(filePathes)
     cssSpinner.stopAndPersist({
       symbol: '🎨 ',
       text: `Build Stylesheet ${chalk.gray('@', moment().format('h:mm:ss'))}`

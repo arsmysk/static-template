@@ -4,7 +4,7 @@ module.exports = (dev) => ({
   copy_dir: ['assets/libs'],
   style: {
     ignore_prefixes: ['_'],
-    ignore_dirs: ['components', 'assets/libs'],
+    ignore_dirs: ['components', 'libs'],
     ext_from: '.css',
     ext_to: '.css',
   },
