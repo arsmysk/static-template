@@ -13,10 +13,5 @@ module.exports = (dev) => ({
     ignore_dirs: [],
     ext_from: '.html',
     ext_to: '.html',
-  },
-  // not work yet
-  // script: {
-  //   ext_from: '.js',
-  //   ext_to: '.js',
-  // },
+  }
 })

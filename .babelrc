@@ -1,0 +1,30 @@
+{
+  "plugins": [
+    "transform-node-env-inline",
+    "inline-dotenv"
+  ],
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "current"
+      },
+      "useBuiltIns": "usage"
+    }]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        ["inline-dotenv", {
+          "path": ".develop.env"
+        }]
+      ]
+    },
+    "production": {
+      "plugins": [
+        ["inline-dotenv", {
+          "path": ".production.env"
+        }]
+      ]
+    }
+  }
+}

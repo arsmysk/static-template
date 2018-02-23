@@ -1,5 +1,6 @@
 const fs = require('fs-extra')
 const path = require('path')
+const glob = require('glob')
 const {CWD, config} = require('./constants')
 
 exports.fromRoot = relativePath => path.resolve(CWD, relativePath)
@@ -29,3 +30,9 @@ exports.distPath = (filePath, ext = path.extname(filePath)) => {
 }
 
 exports.clearDist = async () => fs.remove(path.resolve(CWD, config.dist))
+
+exports.globEntries = pattern => glob.sync(pattern)
+  .reduce((acc, file) => ({
+    ...acc,
+    [file.replace(/.*\/(.+)\.[a-z]+$/g, '$1')]: file
+  }), {})
