@@ -1,12 +1,31 @@
-import bar from './mods/bar'
-bar()
-console.log(process.env.ACCESS_TOKEN)
-console.log(process.env.NODE_ENV)
+import Vue from 'vue'
+import App from 'App'
 
-const main = () => new Promise(resolve => setTimeout(() => {
-  resolve()
-}, 1000))
+import deps from 'mods/deps'
 
-main().then(() => {
-  console.log('after main')
+/** Reffering pcocess.env example */
+console.log('NODE_ENV: ', process.env.NODE_ENV)
+console.log('ACCESS_TOKEN from .env: ', process.env.ACCESS_TOKEN ||
+  'You can add .*.env file in project root to reffer process.env entry from js')
+
+/** Simply import example */
+deps('Hello!')
+
+/** Polyfill example(Promise, setImmediate) */
+Promise.resolve().then(() => setImmediate(() => console.log('Promise() Polyfill')))
+
+/** ES2015+ syntax example */
+const asyncAwait = async () => {
+  const data = await new Promise(resolve => setTimeout(() => {
+    resolve('Async data')
+  }, 1000))
+  console.log('ES2015+ syntax: ', data)
+}
+asyncAwait()
+
+/** Vue.js example */
+document.addEventListener('DOMContentLoaded', () => {
+  new Vue({
+    render: h => h(App)
+  }).$mount('#app')
 })

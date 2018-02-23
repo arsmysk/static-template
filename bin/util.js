@@ -31,8 +31,14 @@ exports.distPath = (filePath, ext = path.extname(filePath)) => {
 
 exports.clearDist = async () => fs.remove(path.resolve(CWD, config.dist))
 
-exports.globEntries = pattern => glob.sync(pattern)
-  .reduce((acc, file) => ({
-    ...acc,
-    [file.replace(/.*\/(.+)\.[a-z]+$/g, '$1')]: file
-  }), {})
+exports.globEntries = (pattern, {debug} = {debug: false}) => {
+  const entries = glob.sync(pattern)
+    .reduce((acc, file) => ({
+      ...acc,
+      [file.replace(/.*\/(.+)\.[a-z]+$/g, '$1')]: file
+    }), {})
+
+  if (debug) console.log(entries)
+
+  return entries
+}

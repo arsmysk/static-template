@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "transform-node-env-inline",
     "inline-dotenv"
   ],
   "presets": [
@@ -15,7 +14,7 @@
     "development": {
       "plugins": [
         ["inline-dotenv", {
-          "path": ".develop.env"
+          "path": ".development.env"
         }]
       ]
     },

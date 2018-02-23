@@ -4,7 +4,6 @@
     "babel-core": "^7.0.0-beta.3",
     "babel-loader": "^7.1.2",
     "babel-plugin-inline-dotenv": "^1.1.2",
-    "babel-plugin-transform-node-env-inline": "^0.3.0",
     "babel-preset-env": "^7.0.0-beta.3",
     "babel-polyfill": "^7.0.0-beta.3",
     "browser-sync": "^2.23.6",
@@ -12,6 +11,7 @@
     "chokidar": "^2.0.2",
     "commander": "^2.14.1",
     "consolidate": "^0.15.0",
+    "css-loader": "^0.28.10",
     "css-mqpacker": "^6.0.2",
     "cssnano": "^3.10.0",
     "fs-extra": "^5.0.0",
@@ -27,6 +27,9 @@
     "postcss-partial-import": "^4.1.0",
     "postcss-preset-env": "^3.2.0",
     "redux": "^3.7.2",
+    "vue-loader": "^14.1.1",
+    "vue-style-loader": "^4.0.2",
+    "vue-template-compiler": "^2.5.13",
     "webpack": "^3.11.0"
   },
   "scripts": {
@@ -36,5 +39,8 @@
     "build:production": "./bin/cmd/index.js -pb",
     "test": "jest",
     "script": "NODE_ENV=development node ./bin/builders/script.js"
+  },
+  "dependencies": {
+    "vue": "^2.5.13"
   }
 }
