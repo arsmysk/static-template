@@ -11,7 +11,7 @@ module.exports = (dev) => ({
   template: {
     ignore_prefixes: ['_'],
     ignore_dirs: [],
-    ext_from: '.html',
+    ext_from: '.njk',
     ext_to: '.html',
   }
 })

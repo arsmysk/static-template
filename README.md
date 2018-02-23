@@ -5,7 +5,7 @@ It has these feature:
 * [postcss-modules](https://github.com/css-modules/postcss-modules)([css modules](https://github.com/css-modules/css-modules))
 * [Vue.js](https://github.com/vuejs/vue) compiler
 * Simple/Uncovered archtecture using [Redux](https://github.com/reactjs/redux)
-* Using [Handlers.js](https://github.com/wycats/handlebars.js/) as template engine
+* Using [Nunjucks](https://mozilla.github.io/nunjucks/) as template engine
 
 # Usage
 ## 1. clone this repo.

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{ page_title }}{% if (page_title) %} | {% endif %}My Awesome Web Site</title>
+  <link rel="stylesheet" href="/assets/style/common.css">
+  <link rel="stylesheet" href="/assets/style/{{id}}.css">
+  <script async defer src="/assets/script/{{id}}.js"></script>
+</head>
+<body>
+  <div class="{{css.common.container}}">
+    <header class="{{css.common.header}}">
+      {% block header %}
+      <p>Default header</p>
+      {% endblock %}
+    </header>
+
+    <main class="{{css.common.main}}">
+      {% block main %}
+      <p>Default main</p>
+      {% endblock %}
+    </main>
+
+    <footer class="{{css.common.footer}}">
+      {% block footer %}
+      <p>Default footer</p>
+      {% endblock %}
+    </footer>
+  </div>
+</body>
+</html>

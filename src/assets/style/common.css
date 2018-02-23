@@ -1,0 +1,18 @@
+@import "normalize.css";
+@import "_variables.css";
+
+.container {
+  background-color: aliceblue;
+}
+
+.header {
+  background-color: bisque;
+}
+
+.main {
+  background-color: gainsboro;
+}
+
+.footer {
+  background-color: mediumpurple;
+}

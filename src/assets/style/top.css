@@ -1,12 +1,7 @@
-@import "normalize.css";
 @import "_variables.css";
 
-body {
-  color: var(--color);
-}
-
 .foo {
-  color: blue;
+  color: var(--color);
   display: flex;
   & .bar {
     color: blue;
@@ -14,17 +9,13 @@ body {
   }
 }
 
-.foo {
-  border: solid 1px;
+@media (min-width: 300px) {
+  .bar {
+    color: var(--color);
+  }
 }
 @media (min-width: 300px) {
   .baz {
     color: green;
-  }
-}
-
-@media (min-width: 300px) {
-  .bar {
-    color: var(--color);
   }
 }

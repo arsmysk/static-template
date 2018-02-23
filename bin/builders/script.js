@@ -1,15 +1,11 @@
+const {promisify} = require('util')
 const webpack = require('webpack')
 const config = require('../../config/webpack.config')
 
 const init = () => {
   const compiler = webpack(config)
   return {
-    runner: () => new Promise((resolve, reject) =>
-      compiler.run((err, stats) => {
-        if (err) reject(err)
-        resolve(stats)
-      })
-    ),
+    runner: promisify(compiler.run.bind(compiler)),
     watcher: handler => compiler.watch({
       aggregateTimeout: 300,
       poll: 1000,

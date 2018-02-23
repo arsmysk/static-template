@@ -1,12 +1,27 @@
 const fs = require('fs-extra')
 const path = require('path')
-const build = require('consolidate').handlebars
+const nunjucks = require('nunjucks')
+const beautify = require('js-beautify').html
 
 const {distPath, fromRoot} = require('../util')
 
 const store = require('../store')
 const {addHtml} = require('../store/template')
-const {config} = require('../constants')
+const {config, CWD} = require('../constants')
+
+nunjucks.configure(path.join(CWD, 'src'), {
+  autoescape: true,
+  lstripBlocks: true,
+  trimBlocks: true,
+})
+
+beautifyConfig = {
+  'indent_size': 2,
+  'end_with_newline': true,
+  'preserve_newlines': true,
+  'max_preserve_newlines': 1,
+  'wrap_line_length': 120,
+}
 
 module.exports = async filePaths => {
   const state = store.getState()
@@ -17,7 +32,10 @@ module.exports = async filePaths => {
     const page = path.basename(filePath, path.extname(filePath))
     const dist = distPath(filePath, config.template.ext_to)
     try {
-      const html = await build(filePath, {...data[page], css, })
+      const result = await fs.readFile(filePath)
+      const template = result.toString()
+      const html = beautify(nunjucks.renderString(template,
+        {...data[page], css, }), beautifyConfig)
 
       store.dispatch(addHtml(html))
       await fs.outputFile(dist, html)

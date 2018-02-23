@@ -24,8 +24,12 @@ const asyncAwait = async () => {
 asyncAwait()
 
 /** Vue.js example */
-document.addEventListener('DOMContentLoaded', () => {
-  new Vue({
+const initVue = () => new Vue({
     render: h => h(App)
   }).$mount('#app')
-})
+
+if (document.readyState !== 'loading') {
+  initVue()
+} else {
+  document.addEventListener('DOMContentLoaded', initVue)
+}
