@@ -23,12 +23,15 @@ const init = async () => {
     case commands[0]:
       process.env.NODE_ENV = 'development'
       require(path.resolve(__dirname, './cmd/watch'))
+      break
     case commands[1]:
       process.env.NODE_ENV = 'production'
       require(path.resolve(__dirname, './cmd/build'))
+      break
     case commands[2]:
       process.env.NODE_ENV = 'development'
       require(path.resolve(__dirname, './cmd/build'))
+      break
   }
 }
 init()
