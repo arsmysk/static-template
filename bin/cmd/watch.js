@@ -13,8 +13,9 @@ const {updateStyle} = require('../store/style')
 const {updateTemplate} = require('../store/template')
 const {updateAsset} = require('../store/asset')
 const {updateData} = require('../store/data')
+const {updateScript} = require('../store/script')
 
-initStore({
+initStore(() => bs.reload('*.js'), {
   ready: initServer,
   didBuild: ({type}) => {
     switch (type) {
@@ -39,6 +40,8 @@ const cssWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.style.ext
 const htmlWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.template.ext_from}`), commonOptions)
 const assetWatcher = chokidar.watch(config.copy_dir.map(dir => fromRoot(path.join(config.src, dir))), commonOptions)
 const dataWatcher = chokidar.watch(fromRoot('data'), commonOptions)
+// TODO: Commonize with webpack.config.js
+const jsWatcher = chokidar.watch(fromRoot(`${config.src}/**/*.+(js|vue)`), commonOptions)
 
 const initWatchers = async () => {
   console.log(chalk.green('Start watch build\n'))
@@ -48,6 +51,7 @@ const initWatchers = async () => {
     new Promise(resolve => htmlWatcher.on('ready', resolve)),
     new Promise(resolve => assetWatcher.on('ready', resolve)),
     new Promise(resolve => dataWatcher.on('ready', resolve)),
+    new Promise(resolve => jsWatcher.on('ready', resolve)),
   ])
 
   cssWatcher.on('all', async () => {
@@ -64,6 +68,10 @@ const initWatchers = async () => {
 
   dataWatcher.on('all', async () => {
     store.dispatch(updateData())
+  })
+
+  jsWatcher.on('all', async () => {
+    store.dispatch(updateScript())
   })
 }
 initWatchers()

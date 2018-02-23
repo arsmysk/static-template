@@ -37,8 +37,7 @@
     "build": "./bin/cmd/index.js -b",
     "dev": "./bin/cmd/index.js -w",
     "build:production": "./bin/cmd/index.js -pb",
-    "test": "jest",
-    "script": "NODE_ENV=development node ./bin/builders/script.js"
+    "test": "jest"
   },
   "dependencies": {
     "vue": "^2.5.13"

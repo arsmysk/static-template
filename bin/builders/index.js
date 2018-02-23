@@ -9,6 +9,7 @@ const {distPath, fromRoot} = require('../util')
 
 const buildTemplate = require('./template')
 const buildStyle = require('./style')
+const buildScript = require('./script')
 const {config} = require('../constants')
 
 const store = require('../store')
@@ -18,6 +19,7 @@ const cssSpinner = ora('Building Stylesheet')
 const htmlSpinner = ora('Building HTML')
 const assetSpinner = ora('Update Asset')
 const dataSpinner = ora('Update Data')
+const scriptSpinner = ora('Building JavaScript')
 
 module.exports.buildHtml = async () => {
   let error
@@ -130,6 +132,51 @@ module.exports.loadData = async () => {
 
   return {
     type: 'data',
+    error,
+  }
+}
+
+// TODO: refactor below code
+module.exports.buildJs = async jsWatcher => {
+  let error
+  const {runner, watcher} = buildScript()
+
+  if (jsWatcher) {
+    watcher((err, stats) => {
+      // error handling: https://webpack.js.org/api/node/#error-handling
+      if (err) {
+        console.error(err.stack || err)
+        if (err.details) console.error(err.details)
+        return
+      }
+
+      const info = stats.toJson()
+
+      if (stats.hasErrors()) console.error(info.errors)
+      if (stats.hasWarnings()) console.warn(info.warnings)
+
+      scriptSpinner.stopAndPersist({
+        symbol: '🦄 ',
+        text: `Build JavaScript ${chalk.gray('@', moment().format('h:mm:ss'))}`
+      })
+
+      jsWatcher()
+    })
+  } else {
+    try {
+      scriptSpinner.start()
+      await runner()
+      scriptSpinner.stopAndPersist({
+        symbol: '🦄 ',
+        text: `Build JavaScript ${chalk.gray('@', moment().format('h:mm:ss'))}`
+      })
+    } catch (err) {
+      error = err
+    }
+  }
+
+  return {
+    type: 'script',
     error,
   }
 }

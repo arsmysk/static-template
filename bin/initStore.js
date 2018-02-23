@@ -1,8 +1,8 @@
 const {clearDist} = require('./util')
-const {buildHtml, buildCss, copyAssets, loadData} = require('./builders')
+const {buildHtml, buildCss, copyAssets, loadData, buildJs} = require('./builders')
 const store = require('./store')
 
-const handler = ({
+const handler = (jsWatcher, {
   ready,
   didBuild,
 } = {
@@ -17,10 +17,18 @@ const handler = ({
   ;(async () => {
     await clearDist()
     building = true
-    await buildCss()
-    await loadData()
-    await buildHtml()
-    await copyAssets()
+
+    await Promise.all([
+      buildCss(),
+      loadData()
+    ])
+
+    await Promise.all([
+      buildHtml(),
+      copyAssets(),
+      buildJs(jsWatcher)
+    ])
+
     building = false
     ready()
   })()
@@ -56,4 +64,4 @@ const handler = ({
   }
 }
 
-module.exports = (eventHandlers) => store.subscribe(handler(eventHandlers))
+module.exports = (...args) => store.subscribe(handler(...args))
