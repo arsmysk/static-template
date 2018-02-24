@@ -40,20 +40,13 @@ module.exports.buildHtml = async () => {
   let error
 
   const from = config.src
-  const ext = config.template.ext_from
-  const ignorePrefixes = config.template.ignore_prefixes.length > 0 ?
-    `[!${config.template.ignore_prefixes.join('|')}]` :
-    ''
-  const ignoreDirs = config.template.ignore_dirs.length > 0 ?
-    `!(${config.template.ignore_dirs.join('|')})` :
-    ''
-  const matchPattern = path.join(from, '/**/', ignoreDirs, `${ignorePrefixes}*${ext}`)
+  const matchPatterns = config.template.match_patterns
 
   try {
-    const files = await readFiles(matchPattern)
+    const files = await readFiles(matchPatterns)
     const results = builder(store.getState(), files)
       .map(({file, content}) => ({
-        file: distPath(file, config.template.ext_to),
+        file: distPath(file, config.template.ext),
         content
       }))
     await outputFiles(({file}) => store.dispatch(addHtml(file)))(results)
@@ -83,23 +76,15 @@ module.exports.buildCss = async () => {
   let error
 
   const from = config.src
-  const ext = config.style.ext_from
-  const ignorePrefixes = config.style.ignore_prefixes.length > 0 ?
-    `[!${config.style.ignore_prefixes.join('|')}]` :
-    ''
-  const ignoreDirs = config.style.ignore_dirs.length > 0 ?
-    `!(${config.style.ignore_dirs.join('|')})` :
-    ''
-  const matchPattern = path.join(from, '/**/', ignoreDirs, `${ignorePrefixes}*${ext}`)
+  const matchPatterns = config.style.match_patterns
 
   try {
-    const files = await readFiles(matchPattern)
+    const files = await readFiles(matchPatterns)
     const portions = builder(undefined, files)
     const results = await Promise.all(portions
       .map((portion, idx) =>
-        portion(distPath(files[idx].file, config.style.ext_to)))
+        portion(distPath(files[idx].file, config.style.ext)))
     )
-
     await outputFiles()(results)
   } catch (err) {
     cssSpinner.stop()
@@ -126,8 +111,12 @@ module.exports.copyAssets = async () => {
   const builder = buildFiles((state, {file}) => fs.copy(file, distPath(file), false))
   let error
 
+  const matchPatterns = config.copy_dir.map(dir => path.join(config.src, dir))
+
   try {
-    const files = await readFiles(config.copy_dir.map(dir => fromRoot(path.join(config.src, dir))))
+    const files = await readFiles(matchPatterns)
+    if (files.length < 1 && matchPatterns.length !== 0)
+      throw new Error('There are no files to copy')
     await builder(undefined, files)
   } catch (err) {
     assetSpinner.stop()
@@ -155,7 +144,7 @@ module.exports.loadData = async () => {
   let error
 
   try {
-    const files = await readFiles(fromRoot(`data/*.json`))
+    const files = await readFiles('data/*.json')
     const data = builder(undefined, files)
       .reduce((acc, {page, data}) => ({...acc,
         [page]: data
