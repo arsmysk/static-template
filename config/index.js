@@ -4,7 +4,7 @@ const dev = process.env.NODE_ENV === 'development'
 module.exports = {
   src: 'src',
   dist: 'dist',
-  copy_dir: ['assets/libs'],
+  copy_dir: ['src/assets/libs/**/*', 'src/assets/images/**/*'],
   server: { // https://browsersync.io/docs/options
     server: path.join(process.cwd(), 'dist'),
     open: false,

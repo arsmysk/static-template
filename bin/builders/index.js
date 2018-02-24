@@ -111,7 +111,7 @@ module.exports.copyAssets = async () => {
   const builder = buildFiles((state, {file}) => fs.copy(file, distPath(file), false))
   let error
 
-  const matchPatterns = config.copy_dir.map(dir => path.join(config.src, dir))
+  const matchPatterns = config.copy_dir
 
   try {
     const files = await readFiles(matchPatterns)

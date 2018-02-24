@@ -1,5 +1,4 @@
 const {distPath} = require('../util')
-jest.mock('../../config')
 
 describe('distPath', () => {
   it('change ext', () => {
