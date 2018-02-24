@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs-extra')
 const chokidar = require('chokidar')
 const chalk = require('chalk')
 
@@ -6,6 +7,8 @@ const initServer = require('../initserver')
 const {bs} = require('../initserver')
 
 const config = require('../../config')
+const {distPath} = require('../util')
+
 const initStore = require('../initStore')
 const store = require('../store')
 const {updateStyle} = require('../store/style')
@@ -63,6 +66,9 @@ const initWatchers = async () => {
 
   assetWatcher.on('all', async () => {
     store.dispatch(updateAsset())
+  })
+  assetWatcher.on('unlink', async file => {
+    await fs.remove(distPath(file))
   })
 
   dataWatcher.on('all', async () => {
