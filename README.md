@@ -55,3 +55,9 @@ npm run dev
 ├── src // source files
 └── yarn.lock
 ```
+
+## Credit(s)
+Special thank you❤️
+
+Photo by [Pawel Nolbert](https://unsplash.com/photos/62OK9xwVA0c) on [Unsplash](https://unsplash.com/)
+
