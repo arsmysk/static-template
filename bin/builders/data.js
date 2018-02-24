@@ -1,6 +1,6 @@
 const path = require('path')
 
 module.exports = (store, {file, content}) => ({
-  page: path.basename(file, path.extname(file)),
+  page: path.parse(file).name,
   data: JSON.parse(content),
 })

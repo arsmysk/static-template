@@ -2,11 +2,10 @@ const path = require('path')
 const chokidar = require('chokidar')
 const chalk = require('chalk')
 
-const {fromRoot} = require('../util')
 const initServer = require('../initserver')
 const {bs} = require('../initserver')
 
-const {config} = require('../constants')
+const config = require('../../config')
 const initStore = require('../initStore')
 const store = require('../store')
 const {updateStyle} = require('../store/style')
@@ -36,12 +35,12 @@ const commonOptions = {
     pollInterval: 100,
   }
 }
-const cssWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.style.ext_from}`), commonOptions)
-const htmlWatcher = chokidar.watch(fromRoot(`${config.src}/**/*${config.template.ext_from}`), commonOptions)
-const assetWatcher = chokidar.watch(config.copy_dir.map(dir => fromRoot(path.join(config.src, dir))), commonOptions)
-const dataWatcher = chokidar.watch(fromRoot('data'), commonOptions)
+const cssWatcher = chokidar.watch(config.style.match_patterns, commonOptions)
+const htmlWatcher = chokidar.watch(config.template.match_patterns, commonOptions)
+const assetWatcher = chokidar.watch(config.copy_dir, commonOptions)
+const dataWatcher = chokidar.watch('src/data', commonOptions)
 // TODO: Commonize with webpack.config.js
-const jsWatcher = chokidar.watch(fromRoot(`${config.src}/**/*.+(js|vue)`), commonOptions)
+const jsWatcher = chokidar.watch(`src/**/*.+(js|vue)`, commonOptions)
 
 const initWatchers = async () => {
   console.log(chalk.green('Start watch build\n'))

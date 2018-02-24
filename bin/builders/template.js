@@ -17,7 +17,7 @@ beautifyConfig = {
 }
 
 module.exports = ({style: {classNames}, data: {entities}}, {file, content}) => {
-  const page = path.basename(file, path.extname(file))
+  const page = path.parse(file).name
   const builded = beautify(nunjucks.renderString(content,
     {...entities[page], css: classNames}), beautifyConfig)
   return {file, content: builded}

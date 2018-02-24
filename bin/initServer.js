@@ -1,7 +1,10 @@
+const path = require('path')
 const bs = require('browser-sync').create()
-const {fromRoot} = require('./util')
 
-const {config} = require('./constants')
+const config = require('../config')
 
-module.exports = () => bs.init({server: fromRoot(config.dist), open: false})
+module.exports = () => bs.init({
+  server: path.join(process.cwd(), config.dist),
+  open: false
+})
 module.exports.bs = bs

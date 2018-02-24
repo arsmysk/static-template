@@ -1,9 +1,7 @@
 const fs = require('fs-extra')
 const path = require('path')
 const glob = require('globby')
-const {CWD, config} = require('./constants')
-
-exports.fromRoot = relativePath => path.resolve(CWD, relativePath)
+const config = require('../config')
 
 exports.distPath = (filePath, ext = path.extname(filePath)) => {
   const distPath = filePath.split('/')
@@ -23,7 +21,7 @@ exports.distPath = (filePath, ext = path.extname(filePath)) => {
     .pathes.join('/')
 
   return path.format({...path.parse(distPath),
-    name: path.basename(distPath, path.extname(distPath)),
+    name: path.parse(distPath).name,
     base: '',
     ext
   })
@@ -53,7 +51,7 @@ exports.outputFiles = callback => files => Promise.all(files.map(async ({file, c
   await fs.outputFile(file, content)
 }))
 
-exports.clearDist = async () => fs.remove(path.resolve(CWD, config.dist))
+exports.clearDist = async () => fs.remove(path.join(process.cwd(), config.dist))
 
 exports.globWebpackEntries = (pattern, {debug} = {debug: false}) => {
   const entries = glob.sync(pattern)

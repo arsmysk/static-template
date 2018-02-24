@@ -1,4 +1,6 @@
-module.exports = (dev) => ({
+const dev = process.env.NODE_ENV === 'development'
+
+module.exports = {
   src: 'src',
   dist: 'dist',
   copy_dir: ['assets/libs'],
@@ -18,4 +20,4 @@ module.exports = (dev) => ({
       '!src/**/_*.njk',
     ],
   }
-})
+}

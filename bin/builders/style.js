@@ -8,11 +8,13 @@ const mqpacker = require('css-mqpacker')
 const presetEnv = require('postcss-preset-env')
 const partialImport = require("postcss-partial-import")
 
-const {distPath, fromRoot} = require('../util')
-const {DEV, config} = require('../constants')
+const {distPath} = require('../util')
+const config = require('../../config')
 
 const store = require('../store')
 const {addClassNames} = require('../store/style')
+
+const dev = process.env.NODE_ENV === 'development'
 
 const commonPlugins = [
   partialImport({
@@ -25,7 +27,7 @@ const commonPlugins = [
     generateScopedName: '[name]_[local]_[hash:base64:5]',
 
     getJSON (cssFileName, json, outputFileName) {
-      const nameSpace = path.basename(cssFileName, `${config.style.ext_from}`)
+      const nameSpace = path.parse(cssFileName).name
       store.dispatch(addClassNames({[nameSpace]: json}))
     }
   }),
@@ -37,7 +39,7 @@ const productionPlugins = [
   cssnano,
 ]
 
-const usingPlugins = DEV ? commonPlugins :
+const usingPlugins = dev ? commonPlugins :
   [...commonPlugins,
     ...productionPlugins,
   ]
