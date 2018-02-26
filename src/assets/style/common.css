@@ -1,4 +1,4 @@
-@import "normalize.css";
+@import "_reset.css";
 @import "_variables.css";
 
 .container {
