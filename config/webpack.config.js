@@ -28,7 +28,7 @@ module.exports = {
   entry: globWebpackEntries(path.join(cwd, 'src/assets/script/[!_]*.js')),
   output: {
     filename: `[name].js`,
-    path: path.join(cwd, 'dist/assets/script/')
+    path: path.join(cwd, 'wp-content/themes/my-awesome-theme/assets/script/')
   },
   // https://webpack.js.org/configuration/devtool/
   devtool: dev ? 'inline-source-map' : false,

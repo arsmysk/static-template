@@ -3,12 +3,15 @@ const dev = process.env.NODE_ENV === 'development'
 
 module.exports = {
   src: 'src',
-  dist: 'dist',
-  copy_dir: ['src/assets/libs/**/*', 'src/assets/images/**/*'],
+  dist: 'wp-content/themes/my-awesome-theme',
+  copy_dir: [
+    'src/assets/libs/**/*',
+    'src/assets/images/**/*',
+    'src/style.css',
+  ],
   server: { // https://browsersync.io/docs/options
-    server: path.join(process.cwd(), 'dist'),
     open: false,
-    proxy: false,
+    proxy: 'http://localhost:8888',
   },
   style: {
     ext: '.css', // exported with this extension
@@ -19,7 +22,7 @@ module.exports = {
     ],
   },
   template: {
-    ext: '.html', // exported with this extension
+    ext: '.php', // exported with this extension
     match_patterns: [ // minimatch: https://github.com/isaacs/minimatch#usage
       'src/**/*.njk',
       '!src/template/',

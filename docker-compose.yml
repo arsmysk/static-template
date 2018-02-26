@@ -1,0 +1,33 @@
+# https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
+version: '2'
+services:
+  mariadb:
+    image: 'bitnami/mariadb:latest'
+    volumes:
+      - './db:/bitnami'
+    environment:
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_DATABASE=bitnami_wordpress
+      - ALLOW_EMPTY_PASSWORD=yes
+  wordpress:
+    image: 'bitnami/wordpress:latest'
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - '8888:80'
+      - '443:443'
+    volumes:
+      - './wp-content:/bitnami/wordpress/wp-content'
+    depends_on:
+      - mariadb
+    environment:
+      - MARIADB_HOST=mariadb
+      - MARIADB_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - ALLOW_EMPTY_PASSWORD=yes
+volumes:
+  mariadb_data:
+    driver: local
+  wordpress_data:
+    driver: local
