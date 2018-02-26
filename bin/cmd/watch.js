@@ -41,7 +41,7 @@ const commonOptions = {
 const cssWatcher = chokidar.watch(config.style.match_patterns, commonOptions)
 const htmlWatcher = chokidar.watch(config.template.match_patterns, commonOptions)
 const assetWatcher = chokidar.watch(config.copy_dir, commonOptions)
-const dataWatcher = chokidar.watch('src/data', commonOptions)
+const dataWatcher = chokidar.watch('data', commonOptions)
 // TODO: Commonize with webpack.config.js
 const jsWatcher = chokidar.watch(`src/**/*.+(js|vue)`, commonOptions)
 
