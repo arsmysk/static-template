@@ -1,4 +1,5 @@
 const path = require('path')
+const camelcase = require('camelcase')
 
 const postcss = require('postcss')
 const cssModules = require('postcss-modules')
@@ -27,8 +28,13 @@ const commonPlugins = [
     generateScopedName: '[name]_[local]_[hash:base64:5]',
 
     getJSON (cssFileName, json, outputFileName) {
-      const nameSpace = path.parse(cssFileName).name
-      store.dispatch(addClassNames({[nameSpace]: json}))
+      const nameSpace = camelcase(path.parse(cssFileName).name)
+      const cameledJson = Object.entries(json).reduce((acc, [key, val]) => ({
+        ...acc,
+        [camelcase(key)]: val
+      }), {})
+
+      store.dispatch(addClassNames({[nameSpace]: cameledJson}))
     }
   }),
 ]
