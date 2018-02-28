@@ -1,0 +1,18 @@
+[ignore]
+.*/node_modules/.*
+
+[include]
+
+[libs]
+flow-typed/
+
+[lints]
+
+[options]
+module.file_ext=.js
+module.file_ext=.vue
+
+module.name_mapper='^\(.*\)$' -> '<PROJECT_ROOT>/src/assets/script/\1'
+module.ignore_non_literal_requires=true
+
+[strict]

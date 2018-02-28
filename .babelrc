@@ -3,6 +3,7 @@
     "inline-dotenv"
   ],
   "presets": [
+    "flow",
     ["env", {
       "targets": {
         "node": "current"

@@ -1,0 +1,9 @@
+# https://eslint.org/docs/user-guide/configuring
+---
+  root: true
+  parser: babel-eslint
+  extends:
+    - prettier
+  rules:
+    no-unused-vars:
+      - warn

@@ -2,10 +2,12 @@
   "devDependencies": {
     "autoprefixer": "^8.0.0",
     "babel-core": "^7.0.0-beta.3",
+    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-inline-dotenv": "^1.1.2",
     "babel-polyfill": "^7.0.0-beta.3",
     "babel-preset-env": "^7.0.0-beta.3",
+    "babel-preset-flow": "^6.23.0",
     "browser-sync": "^2.23.6",
     "camelcase": "^4.1.0",
     "chalk": "^2.3.1",
@@ -14,11 +16,18 @@
     "css-loader": "^0.28.10",
     "css-mqpacker": "^6.0.2",
     "cssnano": "^3.10.0",
+    "eslint": "^4.18.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-flowtype": "^2.46.1",
+    "flow-bin": "^0.66.0",
+    "flow-typed": "^2.3.0",
     "fs-extra": "^5.0.0",
     "globby": "^8.0.1",
+    "husky": "^0.14.3",
     "inquirer": "^5.1.0",
     "jest": "^22.3.0",
     "js-beautify": "^1.7.5",
+    "lint-staged": "^7.0.0",
     "moment": "^2.20.1",
     "nunjucks": "^3.1.0",
     "ora": "^1.4.0",
@@ -26,6 +35,7 @@
     "postcss-modules": "^1.1.0",
     "postcss-partial-import": "^4.1.0",
     "postcss-preset-env": "^3.2.0",
+    "prettier": "^1.11.0",
     "redux": "^3.7.2",
     "vue-loader": "^14.1.1",
     "vue-style-loader": "^4.0.2",
@@ -37,7 +47,21 @@
     "build": "./bin/cmd/index.js -b",
     "dev": "./bin/cmd/index.js -w",
     "build:production": "./bin/cmd/index.js -pb",
-    "test": "jest"
+    "test": "jest",
+    "install:type": "flow-typed install",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.js": [
+        "prettier --write",
+        "flow --color=always",
+        "eslint --fix",
+        "git add"
+      ],
+      "*.css": ["prettier --parser=postcss --write", "git add"],
+      "*.json": ["prettier --parser=json --write", "git add"]
+    }
   },
   "dependencies": {
     "normalize.css": "^8.0.0",
