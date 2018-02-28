@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import App from 'App'
 
-import deps from "mods/deps"
+import deps from 'mods/deps'
 
 /** Reffering pcocess.env example */
 console.log('NODE_ENV: ', process.env.NODE_ENV)
@@ -13,7 +13,7 @@ console.log(
 )
 
 /** Simply import example */
-deps("Hello!")
+deps('Hello!')
 
 /** Polyfill example(Promise, setImmediate) */
 Promise.resolve().then(() =>
@@ -37,10 +37,10 @@ const initVue = () =>
     render: h => h(App),
   }).$mount('#app')
 
-if (document.readyState !== "loading") {
+if (document.readyState !== 'loading') {
   initVue()
 } else {
-  document.addEventListener("DOMContentLoaded", initVue)
+  document.addEventListener('DOMContentLoaded', initVue)
 }
 
 /** flowtype example */
