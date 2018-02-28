@@ -9,54 +9,59 @@ const commonPlugins = [
   // https://vuejs.org/v2/guide/deployment.html
   new webpack.DefinePlugin({
     'process.env': {
-      NODE_ENV: `"${process.env.NODE_ENV}"` || '"development"'
-    }
+      NODE_ENV: `"${process.env.NODE_ENV}"` || '"development"',
+    },
   }),
 ]
 const productionPlugins = [
   new webpack.optimize.UglifyJsPlugin({
     test: /\.js($|\?)/i,
-    sourceMap: false
-  })
+    sourceMap: false,
+  }),
 ]
-const usingPlugins = process.env.NODE_ENV === 'development' ? commonPlugins :
-  [...commonPlugins,
-    ...productionPlugins
-  ]
+const usingPlugins =
+  process.env.NODE_ENV === 'development'
+    ? commonPlugins
+    : [...commonPlugins, ...productionPlugins]
 
 module.exports = {
   entry: globWebpackEntries(path.join(cwd, 'src/assets/script/[!_]*.js')),
   output: {
     filename: `[name].js`,
-    path: path.join(cwd, 'dist/assets/script/')
+    path: path.join(cwd, 'dist/assets/script/'),
   },
   // https://webpack.js.org/configuration/devtool/
   devtool: dev ? 'inline-source-map' : false,
   // https://webpack.js.org/configuration/resolve/
   resolve: {
     extensions: ['.js', '.vue'],
-    modules: [
-      path.join(cwd, 'src/assets/script'),
-      'node_modules'
-    ]
+    modules: [path.join(cwd, 'src/assets/script'), 'node_modules'],
   },
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        exclude: /(node_modules|bower_components)/,
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'vue-loader'
-        }
+          loader: 'eslint-loader',
+        },
+      },
+      {
+        test: /\.vue$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'vue-loader',
+        },
       },
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
   plugins: usingPlugins,
 }
