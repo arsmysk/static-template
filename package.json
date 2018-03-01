@@ -50,16 +50,11 @@
     "build:production": "./bin/cmd/index.js -pb",
     "test": "jest",
     "install:type": "flow-typed install",
-    "precommit": "lint-staged"
+    "precommit": "flow check && lint-staged"
   },
   "lint-staged": {
     "linters": {
-      "*.js": [
-        "prettier --write",
-        "flow --color=always",
-        "eslint --fix",
-        "git add"
-      ],
+      "*.js": ["prettier --write", "eslint --fix", "git add"],
       "*.css": ["prettier --parser=postcss --write", "git add"],
       "*.json": ["prettier --parser=json --write", "git add"]
     }
