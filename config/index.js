@@ -5,25 +5,32 @@ module.exports = {
   src: 'src',
   dist: 'dist',
   copy_dir: ['src/assets/libs/**/*', 'src/assets/images/**/*'],
-  server: { // https://browsersync.io/docs/options
+  server: {
+    // https://browsersync.io/docs/options
     server: path.join(process.cwd(), 'dist'),
     open: false,
     proxy: false,
   },
   style: {
     ext: '.css', // exported with this extension
-    match_patterns: [ // minimatch: https://github.com/isaacs/minimatch#usage
+    entry: [
+      'src/assets/style/common.css',
+      'src/assets/style/top.css',
+      'src/assets/style/sub.css',
+    ],
+    match_patterns: [
+      // minimatch: https://github.com/isaacs/minimatch#usage
       'src/assets/style/**/*.css',
-      '!src/assets/style/components',
       '!src/assets/style/**/_*.css',
     ],
   },
   template: {
     ext: '.html', // exported with this extension
-    match_patterns: [ // minimatch: https://github.com/isaacs/minimatch#usage
+    match_patterns: [
+      // minimatch: https://github.com/isaacs/minimatch#usage
       'src/**/*.njk',
       '!src/template/',
       '!src/**/_*.njk',
     ],
-  }
+  },
 }

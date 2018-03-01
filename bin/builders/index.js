@@ -72,14 +72,36 @@ module.exports.buildCss = async () => {
   const builder = buildFiles(buildStyle)
   let error
   const from = config.src
-  const matchPatterns = config.style.match_patterns
+  const entry = config.style.entry
+  const matchPatterns = [
+    ...config.style.match_patterns,
+    // exclude entry files from other css
+    ...entry.map(ent => `!${ent}`),
+  ]
   try {
-    const files = await readFiles(matchPatterns)
-    const portions = builder(undefined, files)
+    // FIXME: It's tooo complex ;(
+    const entryFiles = await readFiles(entry)
+    const entryPortions = builder(undefined, entryFiles)
+    const othersFiles = await readFiles(matchPatterns)
+    const othersPortions = builder(undefined, othersFiles)
     const results = await Promise.all(
-      portions.map((portion, idx) =>
-        portion(distPath(files[idx].file, config.style.ext)),
-      ),
+      // others portion need entryFiles path
+      entryFiles.map(async (ent, idx) => {
+        const results = await Promise.all([
+          entryPortions[idx](distPath(ent.file, config.style.ext)),
+          ...othersPortions.map(portion =>
+            portion(distPath(ent.file, config.style.ext)),
+          ),
+        ])
+        // concat each data
+        return results.reduce(
+          (acc, {file, content}) => ({
+            file,
+            content: `${acc.content}\n${content}`,
+          }),
+          {content: '', file: ''},
+        )
+      }),
     )
     await outputFiles()(results)
   } catch (err) {

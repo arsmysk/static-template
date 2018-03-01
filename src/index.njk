@@ -1,8 +1,8 @@
 {% extends "template/common.njk" %}
 
 {% block header %}
-  <h1>Hello {{user}}</h1>
-  <p>Top page header</p>
+  <h1 class="{{css.button.root}}">Hello {{user}}</h1>
+  <p class="{{css.top.bar}}">Top page header</p>
 {% endblock %}
 {% block main %}
   <div id="app"></div>
