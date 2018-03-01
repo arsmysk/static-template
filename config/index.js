@@ -29,7 +29,7 @@ module.exports = {
     match_patterns: [
       // minimatch: https://github.com/isaacs/minimatch#usage
       'src/**/*.njk',
-      '!src/template/',
+      '!src/**/template/*.njk',
       '!src/**/_*.njk',
     ],
   },
