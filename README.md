@@ -16,17 +16,17 @@ git clone https://github.com/sundaycrafts/static-template.git
 ```
 
 ## 2. install deps.
-Ensure installed [Node.js](https://nodejs.org/en/) in your machine.
+Ensure installed [Node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/lang/en/docs/install/) in your machine.
 
 ```shell
-npm install
+yarn install
 ```
 
 ## 3. lunch it
 Intaractive CUI.
 
 ```shell
-npm start
+yarn start
 ```
 
 Or exec each command.
@@ -34,10 +34,10 @@ Please reffer `package.json` in project root to find all command.
 
 ```shell
 # build for production(minify, prefixed)
-npm run build:production
+yarn build:production
 
 # Start development(watch and build sources)
-npm run dev
+yarn dev
 ```
 
 ## Structure
@@ -57,7 +57,7 @@ npm run dev
 ```
 
 ## Credit(s)
-Special thank you❤️
+Special thanks❤️
 
 Photo by [Pawel Nolbert](https://unsplash.com/photos/62OK9xwVA0c) on [Unsplash](https://unsplash.com/)
 
