@@ -33,6 +33,7 @@
     "nunjucks": "^3.1.0",
     "ora": "^1.4.0",
     "postcss": "^6.0.18",
+    "postcss-calc": "^6.0.1",
     "postcss-modules": "^1.1.0",
     "postcss-partial-import": "^4.1.0",
     "postcss-preset-env": "^3.2.0",
@@ -60,6 +61,7 @@
     }
   },
   "dependencies": {
+    "bowser": "^1.9.2",
     "normalize.css": "^8.0.0",
     "vue": "^2.5.13"
   }
