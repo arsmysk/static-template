@@ -47,6 +47,7 @@
     "build": "./bin/cmd/index.js -b",
     "dev": "./bin/cmd/index.js -w",
     "build:production": "./bin/cmd/index.js -pb",
+    "dev:production": "./bin/cmd/index.js -pw",
     "test": "jest",
     "install:type": "flow-typed install",
     "precommit": "flow check && lint-staged"
