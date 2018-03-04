@@ -14,14 +14,14 @@ module.exports = {
   style: {
     ext: '.css', // exported with this extension
     entry: [
-      'src/assets/style/common.css',
-      'src/assets/style/top.css',
-      'src/assets/style/sub.css',
+      'src/assets/style/common.scss',
+      'src/assets/style/top.scss',
+      'src/assets/style/sub.scss',
     ],
     match_patterns: [
       // minimatch: https://github.com/isaacs/minimatch#usage
-      'src/assets/style/**/*.css',
-      '!src/assets/style/**/_*.css',
+      'src/assets/style/**/*.scss',
+      '!src/assets/style/**/_*.scss',
     ],
   },
   template: {

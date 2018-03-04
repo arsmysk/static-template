@@ -1,7 +1,7 @@
-@import '_variables.css';
+@import '_variables';
 
 .foo {
-  color: var(--color);
+  color: $color;
   display: flex;
   & .bar {
     color: blue;
@@ -11,7 +11,7 @@
 
 @media (min-width: 300px) {
   .bar {
-    color: var(--color);
+    color: $color;
   }
 }
 @media (min-width: 300px) {
