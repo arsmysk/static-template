@@ -1,4 +1,4 @@
-const {distPath} = require('../util')
+const {distPath, stripExcMark} = require('../util')
 const {dist, src} = require('../../config')
 
 describe('distPath', () => {
@@ -30,5 +30,19 @@ describe('distPath', () => {
   it('path NOT include `src`', () => {
     const path = distPath(`./not/include/s_c/file.js`)
     expect(path).toEqual(`./not/include/s_c/file.js`)
+  })
+})
+
+describe('stripExcMark', () => {
+  it('strip “!” in top', () => {
+    const withExc = '!src/assets/style/**/_*.scss'
+    const striped = stripExcMark(withExc)
+    expect(striped).toEqual('src/assets/style/**/_*.scss')
+  })
+
+  it('should not strip “!” in middle', () => {
+    const withExc = 'src/assets/!style/**/_*.scss'
+    const striped = stripExcMark(withExc)
+    expect(striped).toEqual('src/assets/!style/**/_*.scss')
   })
 })

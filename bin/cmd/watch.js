@@ -7,7 +7,7 @@ const initServer = require('../initserver')
 const {bs} = require('../initserver')
 
 const config = require('../../config')
-const {distPath} = require('../util')
+const {distPath, stripExcMark} = require('../util')
 
 const initStore = require('../initStore')
 const store = require('../store')
@@ -28,7 +28,7 @@ initStore(() => bs.reload('*.js'), {
       case 'asset':
         bs.reload(`*${config.template.ext_to}`)
     }
-  }
+  },
 })
 
 const commonOptions = {
@@ -36,12 +36,18 @@ const commonOptions = {
   awaitWriteFinish: {
     stabilityThreshold: 200,
     pollInterval: 100,
-  }
+  },
 }
-const cssWatcher = chokidar.watch(config.style.match_patterns, commonOptions)
-const htmlWatcher = chokidar.watch(config.template.match_patterns, commonOptions)
-const assetWatcher = chokidar.watch(config.copy_dir, commonOptions)
-const dataWatcher = chokidar.watch('data', commonOptions)
+
+const watchPatternsStyle = config.style.match_patterns.map(stripExcMark)
+const watchPatternsTemplate = config.template.match_patterns.map(stripExcMark)
+const watchPatternsCopyDir = config.copy_dir.map(stripExcMark)
+const watchPatternsData = 'data'
+
+const cssWatcher = chokidar.watch(watchPatternsStyle, commonOptions)
+const htmlWatcher = chokidar.watch(watchPatternsTemplate, commonOptions)
+const assetWatcher = chokidar.watch(watchPatternsCopyDir, commonOptions)
+const dataWatcher = chokidar.watch(watchPatternsData, commonOptions)
 // TODO: Commonize with webpack.config.js
 const jsWatcher = chokidar.watch(`src/**/*.+(js|vue)`, commonOptions)
 
