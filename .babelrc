@@ -1,7 +1,4 @@
 {
-  "plugins": [
-    "inline-dotenv"
-  ],
   "presets": [
     "flow",
     ["env", {
@@ -12,19 +9,7 @@
     }]
   ],
   "env": {
-    "development": {
-      "plugins": [
-        ["inline-dotenv", {
-          "path": ".development.env"
-        }]
-      ]
-    },
-    "production": {
-      "plugins": [
-        ["inline-dotenv", {
-          "path": ".production.env"
-        }]
-      ]
-    }
+    "development": {},
+    "production": {}
   }
 }

@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const Dotenv = require('dotenv-webpack')
 const {globWebpackEntries} = require('../bin/util')
 const path = require('path')
 
@@ -11,6 +12,12 @@ const commonPlugins = [
     'process.env': {
       NODE_ENV: `"${process.env.NODE_ENV}"` || '"development"',
     },
+  }),
+  // https://github.com/mrsteele/dotenv-webpack
+  new Dotenv({
+    path: dev
+      ? path.join(cwd, '.development.env')
+      : path.join(cwd, '.production.env'),
   }),
 ]
 const productionPlugins = [
