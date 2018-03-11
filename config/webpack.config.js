@@ -59,6 +59,9 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'vue-loader',
+          options: {
+            postcss: [require('autoprefixer')()],
+          },
         },
       },
       {

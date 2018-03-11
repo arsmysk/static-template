@@ -12,10 +12,12 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import '../style/_variables';
+
   h1 {
     cursor: pointer;
     display: inline-block;
-    color: red;
+    color: $color;
   }
 </style>
