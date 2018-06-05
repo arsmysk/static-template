@@ -1,4 +1,5 @@
 const {combineReducers} = require('redux')
+const merge = require('lodash/merge')
 
 /** Actions */
 const CLASSNAME_ADD = 'style/class_names/add'
@@ -8,7 +9,7 @@ const LASTUPDETED_UPDATE = 'style/lastUpdated/update'
 const classNames = (state = {}, {type, payload} = {type: '', payload: {}}) => {
   switch (type) {
     case CLASSNAME_ADD:
-      return {...state, ...payload}
+      return merge(state, payload)
     default:
       return state
   }
@@ -27,4 +28,7 @@ module.exports = combineReducers({classNames, lastUpdated})
 
 /** Action Creator */
 module.exports.addClassNames = data => ({type: CLASSNAME_ADD, payload: data})
-module.exports.updateStyle = (time = Date.now()) => ({type: LASTUPDETED_UPDATE, payload: time})
+module.exports.updateStyle = (time = Date.now()) => ({
+  type: LASTUPDETED_UPDATE,
+  payload: time,
+})
