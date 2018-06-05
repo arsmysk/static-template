@@ -1,6 +1,9 @@
 const path = require('path')
-const camelcase = require('camelcase')
+const camelcase = require('lodash/camelcase')
 const {promisify} = require('util')
+const zipObjectDeep = require('lodash/fp/zipObjectDeep')
+const filter = require('lodash/fp/filter')
+const pipe = require('lodash/fp/pipe')
 
 const postcss = require('postcss')
 const cssModules = require('postcss-modules')
@@ -22,7 +25,11 @@ const commonPlugins = [
     generateScopedName: '[name]_[local]_[hash:base64:5]',
 
     getJSON(cssFileName, json, outputFileName) {
-      const nameSpace = camelcase(path.parse(cssFileName).name)
+      const moduleRoot = path.join(
+        process.cwd(),
+        config.style.cssModulePathRoot,
+        '/',
+      )
       const cameledJson = Object.entries(json).reduce(
         (acc, [key, val]) => ({
           ...acc,
@@ -31,7 +38,16 @@ const commonPlugins = [
         {},
       )
 
-      store.dispatch(addClassNames({[nameSpace]: cameledJson}))
+      const data = pipe([
+        str => str.replace(moduleRoot, ''),
+        str => str.split('/'),
+        filter(str => !!str),
+        arr => arr.map(str => camelcase(path.parse(str).name)),
+        arr => arr.join('.'),
+        str => zipObjectDeep([str])([cameledJson]),
+      ])(cssFileName)
+
+      store.dispatch(addClassNames(data))
     },
   }),
 ]

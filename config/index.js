@@ -13,6 +13,7 @@ module.exports = {
   },
   style: {
     ext: '.css', // exported with this extension
+    cssModulePathRoot: 'src/assets/style', // the structure root for referring from template like `{{css.foo.bar}}`
     entry: [
       'src/assets/style/common.scss',
       'src/assets/style/top.scss',
