@@ -27,4 +27,7 @@ module.exports = combineReducers({entities, lastUpdated})
 
 /** Action Creator */
 module.exports.updateEntities = data => ({type: ENTITIES_UPDATE, payload: data})
-module.exports.updateData = (time = Date.now()) => ({type: LASTUPDETED_UPDATE, payload: time})
+module.exports.updateData = (time = Date.now()) => ({
+  type: LASTUPDETED_UPDATE,
+  payload: time,
+})

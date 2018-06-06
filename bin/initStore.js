@@ -1,14 +1,20 @@
 const {clearDist} = require('./util')
-const {buildHtml, buildCss, copyAssets, loadData, buildJs} = require('./builders')
+const {
+  buildHtml,
+  buildCss,
+  copyAssets,
+  loadData,
+  buildJs,
+} = require('./builders')
 const store = require('./store')
 
-const handler = (jsWatcher, {
-  ready,
-  didBuild,
-} = {
-  ready: new Function(),
-  didBuild: new Function(),
-}) => {
+const handler = (
+  jsWatcher,
+  {ready, didBuild} = {
+    ready: new Function(),
+    didBuild: new Function(),
+  },
+) => {
   store.dispatch({type: '@INIT'})
   let building = false
   let current = store.getState()
@@ -18,16 +24,9 @@ const handler = (jsWatcher, {
     await clearDist()
     building = true
 
-    await Promise.all([
-      buildCss(),
-      loadData()
-    ])
+    await Promise.all([buildCss(), loadData()])
 
-    await Promise.all([
-      buildHtml(),
-      copyAssets(),
-      buildJs(jsWatcher)
-    ])
+    await Promise.all([buildHtml(), copyAssets(), buildJs(jsWatcher)])
 
     building = false
     ready()
@@ -40,7 +39,7 @@ const handler = (jsWatcher, {
     let previous = current
     current = store.getState()
 
-    if (building || previous ===  current) return
+    if (building || previous === current) return
     building = true
 
     if (previous.style.lastUpdated < current.style.lastUpdated) {

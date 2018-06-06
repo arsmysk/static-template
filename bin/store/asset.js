@@ -16,4 +16,7 @@ const lastUpdated = (state = 0, {type, payload} = {type: '', payload: 0}) => {
 module.exports = combineReducers({lastUpdated})
 
 /** Action Creator */
-module.exports.updateAsset = (time = Date.now()) => ({type: LASTUPDETED_UPDATE, payload: time})
+module.exports.updateAsset = (time = Date.now()) => ({
+  type: LASTUPDETED_UPDATE,
+  payload: time,
+})

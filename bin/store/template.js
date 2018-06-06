@@ -27,4 +27,7 @@ module.exports = combineReducers({html, lastUpdated})
 
 /** Action Creator */
 module.exports.addHtml = data => ({type: HTML_ADD, payload: data})
-module.exports.updateTemplate = (time = Date.now()) => ({type: LASTUPDETED_UPDATE, payload: time})
+module.exports.updateTemplate = (time = Date.now()) => ({
+  type: LASTUPDETED_UPDATE,
+  payload: time,
+})
