@@ -19,12 +19,16 @@ beautifyConfig = {
 module.exports = ({style: {classNames}, data: {entities}}, {file, content}) => {
   const page = path.parse(file).name
   const builded = beautify(
-    nunjucks.renderString(content, {
-      ...entities[page],
-      css: classNames,
-      __common__: entities.__common__,
-      env: process.env,
-    }),
+    nunjucks.renderString(
+      content,
+      {
+        ...entities[page],
+        css: classNames,
+        __common__: entities.__common__,
+        env: process.env,
+      },
+      {path: path.join(process.cwd(), file)},
+    ),
     beautifyConfig,
   )
   return {file, content: builded}
