@@ -1,14 +1,18 @@
 # Static web page template
+
 Static web page template is simple boiler plate for make static web site.
 
 It has these feature:
-* [postcss-modules](https://github.com/css-modules/postcss-modules)([css modules](https://github.com/css-modules/css-modules))
-* [Vue.js](https://github.com/vuejs/vue) compiler
-* Simple/Uncovered archtecture using [Redux](https://github.com/reactjs/redux)
-* Using [Nunjucks](https://mozilla.github.io/nunjucks/) as template engine
+
+- [postcss-modules](https://github.com/css-modules/postcss-modules)([css modules](https://github.com/css-modules/css-modules))
+- [Vue.js](https://github.com/vuejs/vue) compiler
+- Simple/Uncovered archtecture using [Redux](https://github.com/reactjs/redux)
+- Using [Nunjucks](https://mozilla.github.io/nunjucks/) as template engine
 
 # Usage
+
 ## 1. clone this repo.
+
 Or download the [latest](https://github.com/sundaycrafts/static-template/archive/master.zip).
 
 ```shell
@@ -16,6 +20,7 @@ git clone https://github.com/sundaycrafts/static-template.git
 ```
 
 ## 2. install deps.
+
 Ensure installed [Node.js](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/lang/en/docs/install/) in your machine.
 
 ```shell
@@ -23,6 +28,7 @@ yarn install
 ```
 
 ## 3. lunch it
+
 Intaractive CUI.
 
 ```shell
@@ -57,7 +63,7 @@ yarn dev
 ```
 
 ## Credit(s)
+
 Special thanks❤️
 
 Photo by [Pawel Nolbert](https://unsplash.com/photos/62OK9xwVA0c) on [Unsplash](https://unsplash.com/)
-
