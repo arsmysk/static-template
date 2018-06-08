@@ -52,7 +52,14 @@ const commonPlugins = [
   }),
 ]
 
-const productionPlugins = [autoPrefixer, mqpacker, cssnano]
+const productionPlugins = [
+  autoPrefixer,
+  mqpacker,
+  cssnano({
+    reduceIdents: false,
+    zindex: false,
+  }),
+]
 
 const usingPlugins = dev
   ? commonPlugins
