@@ -1,5 +1,5 @@
 const path = require('path')
-const camelcase = require('lodash/camelcase')
+const camelcase = require('lodash/camelCase')
 const {promisify} = require('util')
 const zipObjectDeep = require('lodash/fp/zipObjectDeep')
 const filter = require('lodash/fp/filter')
