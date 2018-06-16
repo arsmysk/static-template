@@ -13,7 +13,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../style/_variables';
+  @import 'assets/style/_variables';
 
   h1 {
     cursor: pointer;

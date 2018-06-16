@@ -2,6 +2,8 @@ const webpack = require('webpack')
 const Dotenv = require('dotenv-webpack')
 const {globWebpackEntries} = require('../bin/util')
 const path = require('path')
+const config = require('./index')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const cwd = process.cwd()
 const dev = process.env.NODE_ENV === 'development'
@@ -19,6 +21,7 @@ const commonPlugins = [
       ? path.join(cwd, '.development.env')
       : path.join(cwd, '.production.env'),
   }),
+  new VueLoaderPlugin(),
 ]
 const productionPlugins = [
   new webpack.optimize.UglifyJsPlugin({
@@ -59,14 +62,42 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'vue-loader',
-          options: {
-            postcss: [require('autoprefixer')()],
-          },
         },
       },
       {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]_[local]_[hash:base64:5]',
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [
+                path.resolve(process.cwd(), config.src),
+                path.resolve(process.cwd(), 'node_modules'),
+              ],
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            ident: 'postcss',
+            options: {
+              plugins: [require('autoprefixer')()],
+            },
+          },
+        ],
+      },
+      {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: file =>
+          // https://vue-loader.vuejs.org/migrating.html#importing-sfcs-from-dependencies
+          /node_modules/.test(file) && !/\.vue\.js/.test(file),
         use: {
           loader: 'babel-loader',
         },
