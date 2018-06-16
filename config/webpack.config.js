@@ -68,13 +68,7 @@ module.exports = {
         test: /\.scss$/,
         use: [
           'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[name]_[local]_[hash:base64:5]',
-            },
-          },
+          'css-loader',
           {
             loader: 'sass-loader',
             options: {

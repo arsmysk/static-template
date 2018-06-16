@@ -1,5 +1,5 @@
 <template>
-  <h1 @click="message = 'Clicked!'">{{message}}</h1>
+  <h1 class="foo" @click="message = 'Clicked!'">{{message}}</h1>
 </template>
 
 <script>
@@ -15,7 +15,7 @@
 <style lang="scss" scoped>
   @import 'assets/style/_variables';
 
-  h1 {
+  .foo {
     cursor: pointer;
     display: inline-block;
     color: $color;
