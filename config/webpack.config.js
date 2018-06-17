@@ -9,12 +9,6 @@ const cwd = process.cwd()
 const dev = process.env.NODE_ENV === 'development'
 
 const commonPlugins = [
-  // https://vuejs.org/v2/guide/deployment.html
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: `"${process.env.NODE_ENV}"` || '"development"',
-    },
-  }),
   // https://github.com/mrsteele/dotenv-webpack
   new Dotenv({
     path: dev
@@ -23,18 +17,14 @@ const commonPlugins = [
   }),
   new VueLoaderPlugin(),
 ]
-const productionPlugins = [
-  new webpack.optimize.UglifyJsPlugin({
-    test: /\.js($|\?)/i,
-    sourceMap: false,
-  }),
-]
+const productionPlugins = []
 const usingPlugins =
   process.env.NODE_ENV === 'development'
     ? commonPlugins
     : [...commonPlugins, ...productionPlugins]
 
 module.exports = {
+  mode: dev ? 'development' : 'production',
   entry: globWebpackEntries(path.join(cwd, 'src/assets/script/[!_]*.js')),
   output: {
     filename: `[name].js`,
@@ -47,6 +37,7 @@ module.exports = {
     extensions: ['.js', '.vue'],
     modules: [path.join(cwd, 'src/assets/script'), 'node_modules'],
   },
+  plugins: usingPlugins,
   module: {
     rules: [
       {
@@ -98,5 +89,4 @@ module.exports = {
       },
     ],
   },
-  plugins: usingPlugins,
 }

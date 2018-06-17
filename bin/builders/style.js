@@ -7,6 +7,7 @@ const pipe = require('lodash/fp/pipe')
 
 const postcss = require('postcss')
 const cssModules = require('postcss-modules')
+const atImport = require('postcss-import')
 const autoPrefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const mqpacker = require('css-mqpacker')
@@ -20,6 +21,7 @@ const {addClassNames} = require('../store/style')
 const dev = process.env.NODE_ENV === 'development'
 
 const commonPlugins = [
+  atImport(),
   autoPrefixer,
   cssModules({
     generateScopedName: '[name]_[local]_[hash:base64:5]',
