@@ -12,7 +12,6 @@ const cssnano = require('cssnano')
 const mqpacker = require('css-mqpacker')
 const sass = promisify(require('node-sass').render)
 
-const {distPath} = require('../util')
 const config = require('../../config')
 
 const store = require('../store')

@@ -1,9 +1,6 @@
-const {promisify} = require('util')
-const glob = require('globby')
 const ora = require('ora')
 const chalk = require('chalk')
 const moment = require('moment')
-const path = require('path')
 const fs = require('fs-extra')
 const {distPath, readFiles, buildFiles, outputFiles} = require('../util')
 
