@@ -20,6 +20,7 @@ const {addClassNames} = require('../store/style')
 const dev = process.env.NODE_ENV === 'development'
 
 const commonPlugins = [
+  autoPrefixer,
   cssModules({
     generateScopedName: '[name]_[local]_[hash:base64:5]',
 
@@ -52,7 +53,6 @@ const commonPlugins = [
 ]
 
 const productionPlugins = [
-  autoPrefixer,
   mqpacker,
   cssnano({
     reduceIdents: false,
